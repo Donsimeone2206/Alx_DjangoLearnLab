@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -10,6 +11,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 from .forms import PostForms
 from .forms import CommentForm
+
+def search_view(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    return render(request, 'blog/search_results.html', {'results': results, 'query': query})
 
 # Extend UserCreationForm to include email
 class CustomUserCreationForm(UserCreationForm):
