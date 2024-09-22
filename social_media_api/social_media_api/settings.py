@@ -81,9 +81,14 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'your_db_name'),
+        'USER': os.getenv('DB_USER', 'your_db_user'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'your_db_password'),
+        'HOST': os.getenv('DB_HOST', 'your_db_host'),
+        'PORT': os.getenv('DB_PORT', '5432'),  # Default PostgreSQL port
+    }
 }
 
 
